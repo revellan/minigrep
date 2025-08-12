@@ -1,3 +1,9 @@
+use minigrep::argparse;
+use std::env;
 fn main() {
-    println!("Hello, world!");
+    let args: Vec<String> = env::args().collect();
+    let res: GrCnf = match argparse::parse(&args) {
+        Err(e) => panic!("{}", e),
+        Ok(res) => res,
+    }
 }
