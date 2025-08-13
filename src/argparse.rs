@@ -22,7 +22,8 @@ impl<'a> Conf<'a> {
     pub fn new(args: &'a Vec<String>) -> Conf<'a> {
         match args.len() {
             0 | 1 => {
-                panic!("{}\n{}", NO_ARGS, HELP_MSG)
+                eprintln!("{}\n{}", NO_ARGS, HELP_MSG);
+                process::exit(1);
             }
             2 => Conf::FromStdin(&args[1]),
             3 => Conf::FromFile(FileArgs {
