@@ -11,19 +11,16 @@ fn main() {
             };
             if let Some(e) = error {
                 match e {
-                    ref e if e.kind() == io::ErrorKind::InvalidFilename => {
-                        eprintln!("File not found Error");
-                        std::process::exit(
-                            e.raw_os_error()
-                                .expect(&format!("Could not find File \"{}\"", file_args.file)),
-                        );
+                    ref e if e.kind() == io::ErrorKind::NotFound => {
+                        eprintln!("Could not find File \"{}\"", file_args.file);
+                        std::process::exit(e.raw_os_error().unwrap());
                     }
                     e => {
-                        panic!("{}", e.kind())
+                        eprintln!("{:?}", e.kind());
+                        std::process::exit(e.raw_os_error().unwrap());
                     }
                 }
             }
-            //panic!("{}", e), //eprintln!("File \"{}\" not found!!!", file_args.file)
         }
         argparse::Conf::FromStdin(search_query) => {
             grep::stdin(search_query);
