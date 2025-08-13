@@ -37,3 +37,6 @@ impl<'a> Conf<'a> {
         }
     }
 }
+pub fn printhelp() {
+    eprintln!("{}", HELP_MSG)
+}
