@@ -19,33 +19,25 @@ pub enum Conf {
     FromStdin(String),
 }
 impl Conf {
-    pub fn new<T: Iterator<Item = String>>(args: T) -> Conf {
-        let mut c: u8 = 0;
-        let mut search_query: Option<String> = None;
-        let mut file: Option<String> = None;
-        for i in args {
-            match c {
-                0 => (),
-                1 => search_query = Some(i),
-                2 => file = Some(i),
-                _ => {
-                    eprintln!("{}\n{}", TOO_MANY_ARGS, HELP_MSG);
-                    process::exit(1);
-                }
+    pub fn new<T: Iterator<Item = String>>(mut args: T) -> Conf {
+        args.next();
+        let search_query = match args.next() {
+            Some(s) => s,
+            None => {
+                eprintln!("{}\n{}", NO_ARGS, HELP_MSG);
+                process::exit(1);
             }
-            c += 1;
-        }
-        if search_query == None {
-            eprintln!("{}\n{}", NO_ARGS, HELP_MSG);
-            process::exit(1);
-        } else if file == None {
-            Conf::FromStdin(search_query.expect("'search_query' can't be 'None' at this Point!!!"))
-        } else {
-            Conf::FromFile(FileArgs {
-                search_query: search_query
-                    .expect("'search_query' can't be 'None' at this Point!!!"),
-                file: file.expect("'file' can't be 'None' at this Point!!!"),
-            })
+        };
+        match args.next() {
+            Some(s) if args.next().is_none() => Conf::FromFile(FileArgs {
+                search_query,
+                file: s,
+            }),
+            None => Conf::FromStdin(search_query),
+            Some(_) => {
+                eprintln!("{}\n{}", TOO_MANY_ARGS, HELP_MSG);
+                process::exit(1);
+            }
         }
     }
 }
