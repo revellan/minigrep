@@ -27,10 +27,9 @@ fn file(search_query: &str, file: &str) -> Result<(), io::Error> {
     Ok(())
 }
 pub fn main() {
-    let args: Vec<String> = env::args().collect();
-    match argparse::Conf::new(&args) {
+    match argparse::Conf::new(env::args()) {
         argparse::Conf::FromFile(file_args) => {
-            let error: Option<io::Error> = match file(file_args.search_query, file_args.file) {
+            let error: Option<io::Error> = match file(&file_args.search_query, &file_args.file) {
                 Ok(_) => None,
                 Err(e) => Some(e),
             };
@@ -48,7 +47,7 @@ pub fn main() {
             }
         }
         argparse::Conf::FromStdin(search_query) => {
-            stdin(search_query);
+            stdin(&search_query);
         }
     }
 }

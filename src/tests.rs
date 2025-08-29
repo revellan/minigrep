@@ -4,11 +4,10 @@ use super::*;
 fn argparse_file() {
     use argparse::Conf;
     use argparse::FileArgs;
-    let args: Vec<String> = ["minigrep", "searchstring", "file.txt"]
+    let args = ["minigrep", "searchstring", "file.txt"]
         .iter()
-        .map(|s| s.to_string())
-        .collect();
-    let conf: Conf = Conf::new(&args);
+        .map(|s| s.to_string());
+    let conf: Conf = Conf::new(args);
     let file_args: FileArgs;
     match conf {
         Conf::FromStdin(_) => panic!("Argparse failed to parse Arguments correctly!!!"),
@@ -20,8 +19,8 @@ fn argparse_file() {
 #[test]
 fn argparse_stdin() {
     use argparse::Conf;
-    let args: Vec<String> = ["minigrep", "searchstring"].iter().map(|s| s.to_string()).collect();
-    let conf = Conf::new(&args);
+    let args  = ["minigrep", "searchstring"].iter().map(|s| s.to_string());
+    let conf = Conf::new(args);
     let search_query: String;
     match conf {
         Conf::FromFile(_) => panic!("Argparse failed to parse Arguments correctly!!!"),
